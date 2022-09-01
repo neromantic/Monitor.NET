@@ -5,7 +5,7 @@ VisualStudioVersion = 17.3.32819.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitor.NET", "Monitor.NET\Monitor.NET.csproj", "{C6FD881D-0C32-4E22-925C-B16C8E184A82}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnit", "NUnit\NUnit.csproj", "{56742969-43E8-437F-8153-8D13F6F400FD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitor.NET.Tests", "Monitor.NET.Tests\Monitor.NET.Tests.csproj", "{451B58C8-9A8B-4E91-9C9E-48F2126030D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{C6FD881D-0C32-4E22-925C-B16C8E184A82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6FD881D-0C32-4E22-925C-B16C8E184A82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6FD881D-0C32-4E22-925C-B16C8E184A82}.Release|Any CPU.Build.0 = Release|Any CPU
-		{56742969-43E8-437F-8153-8D13F6F400FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{56742969-43E8-437F-8153-8D13F6F400FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{56742969-43E8-437F-8153-8D13F6F400FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{56742969-43E8-437F-8153-8D13F6F400FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{451B58C8-9A8B-4E91-9C9E-48F2126030D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{451B58C8-9A8B-4E91-9C9E-48F2126030D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{451B58C8-9A8B-4E91-9C9E-48F2126030D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{451B58C8-9A8B-4E91-9C9E-48F2126030D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
