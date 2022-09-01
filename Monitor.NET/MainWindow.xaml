@@ -46,7 +46,14 @@
         </Button>
         <ListView Grid.Row="1" Margin="0,5,0,0" Background="Transparent">
             <!--<ListView.Style>
-                <Style TargetType="{x:Type ListView}">
+                <Style x:Key="GridViewColumnHeaderStyle1" TargetType="{x:Type GridViewColumnHeader}">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" Value="Green"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+                --><!--<Style TargetType="{x:Type ListView}">
                     <Setter Property="Background" Value="Transparent"/>
                     <Setter Property="Foreground" Value="Black"/>
                     <Setter Property="Template">
@@ -58,10 +65,22 @@
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
-                    </Style>
+                    </Style>--><!--
             </ListView.Style>-->
             <ListView.View>
                 <GridView>
+                    <GridView.ColumnHeaderContainerStyle>
+                        <Style TargetType="GridViewColumnHeader">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Foreground" Value="Black"/>
+                            <Setter Property="BorderBrush" Value="Transparent"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="true">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </GridView.ColumnHeaderContainerStyle>
                     <GridViewColumn/>
                     <GridViewColumn Header="IP"/>
                     <GridViewColumn Header="MAC-Adresse"/>
