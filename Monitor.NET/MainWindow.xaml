@@ -5,8 +5,73 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Monitor.NET"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="1024" Width="1440">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StatusBar Grid.Row="0" Grid.ColumnSpan="2" Padding="10,20,10,20" Background="#F8F8F8"/>
+        <Button Content="Scannen" HorizontalAlignment="Left" Margin="261,2,0,0" VerticalAlignment="Top" Width="85" Height="23" 
+                Padding="1,1,1,1">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Background" Value="Black"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="DarkSlateGray"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseCaptured" Value="True">
+                            <Setter Property="Background" Value="DarkGray"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+        <ListView Grid.Row="1" Margin="0,5,0,0" Background="Transparent">
+            <!--<ListView.Style>
+                <Style TargetType="{x:Type ListView}">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListView}">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    </Style>
+            </ListView.Style>-->
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                    <GridViewColumn Header="IP"/>
+                    <GridViewColumn Header="MAC-Adresse"/>
+                    <GridViewColumn/>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+            <ListViewItem ContentStringFormat="test"/>
+        </ListView>
+        <TextBox Grid.Row="0" Margin="10,2,464,5" Foreground="Black">
+        </TextBox>
     </Grid>
 </Window>

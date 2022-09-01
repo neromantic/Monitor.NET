@@ -1,4 +1,4 @@
-namespace NUnit
+namespace Monitor.NET.Tests
 {
     public class Tests
     {
