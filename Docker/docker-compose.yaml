@@ -1,0 +1,7 @@
+version: "3"
+
+services:
+  webServer:
+    image: nginx:latest
+  windowsPC:
+    image: cggruszka/microsoft-windows-helloworld:latest
