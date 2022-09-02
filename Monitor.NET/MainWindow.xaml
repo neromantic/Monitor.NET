@@ -18,10 +18,10 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Border Padding="20 5 0 5">
-                    <TextBox Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Padding="10 5" BorderBrush="#D8D8D8"></TextBox>
+                    <TextBox x:Name="txtNetworkAddress" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Padding="10 5" BorderBrush="#D8D8D8"></TextBox>
                 </Border>
                 <Border Grid.Column="1" Padding="10 5">
-                    <Button Padding="10 0" Background="Black" Foreground="White">Scannen</Button>
+                    <Button x:Name="btnScan" Padding="10 0" Background="Black" Foreground="White" Click="btnScan_Click">Scannen</Button>
                 </Border>
             </Grid>
         </Border>
@@ -31,8 +31,16 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Border BorderThickness="0 0 1 0" BorderBrush="#D8D8D8">
-                <ListView BorderThickness="0">
-                    
+                <ListView x:Name="lvListResult" BorderThickness="0">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn/>
+                            <GridViewColumn Header="IP"/>
+                            <GridViewColumn Header="MAC-Adresse"/>
+                            <GridViewColumn/>
+                            <GridViewColumn/>
+                        </GridView>
+                    </ListView.View>
                 </ListView>
             </Border>
         </Grid>
