@@ -5,9 +5,21 @@ on:
   push:
     branches: main
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 jobs:
   build:
     env:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
       ACTIONS_ALLOW_UNSECURE_COMMANDS: true
     runs-on: windows-latest
 
@@ -37,5 +49,15 @@ jobs:
       uses: actions/upload-artifact@v1.0.0
       with:
         name: Monitor.NET.Release
-        path: "./_build"        
+        path: "./_build"   
+    - name: Setup Pages
+      uses: actions/configure-pages@v2
+    - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+          with:
+          # Upload entire repository
+          path: '_build'
+    - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1   
         
