@@ -1,34 +1,39 @@
-name: NUnit
+
+name: EZRep Build
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches: main
 
 jobs:
   build:
- 
     runs-on: windows-latest
- 
+
     steps:
-      - uses: actions/checkout@v1
-        name: Checkout Code
-     
-      - name: Setup MSBuild Path
-        uses: warrenbuckley/Setup-MSBuild@v1
-       
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1.0.2
-     
-      - name: Restore NuGet Packages
-        run: nuget restore Monitor.NET.sln
- 
-      - name: Build and Publish Web App
-        run: msbuild Monitor.NET.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
- 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v1.0.0
-        with:
-          name: published_webapp
-          path: bin\Release\Publish: dotnet test --no-build --verbosity normal
+    - uses: actions/checkout@v2
+    
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1
+
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.2
+      
+    - name: Navigate to Workspace
+      run: cd $GITHUB_WORKSPACE
+
+    - name: Create Build Directory
+      run: mkdir _build
+      
+    - name: Restore Packages
+      run: nuget restore Monitor.NET.sln
+
+    - name: Build Solution
+      run: |
+        msbuild.exe Monitor.NET.sln /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../_build"
+        
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: Monitor.NET.Release
+        path: "./_build"        
+        
