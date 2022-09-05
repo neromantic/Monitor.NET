@@ -1,5 +1,5 @@
 
-name: EZRep Build
+name: Monitor.NET Build und Publish
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
   build:
     env:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: neromantic.github.io
       ACTIONS_ALLOW_UNSECURE_COMMANDS: true
     runs-on: windows-latest
 
