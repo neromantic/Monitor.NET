@@ -53,9 +53,8 @@ jobs:
     - name: Setup Pages
       uses: actions/configure-pages@v2
     - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
-          with:
-          # Upload entire repository
+      uses: actions/upload-pages-artifact@v1
+        with:
           path: '_build'
     - name: Deploy to GitHub Pages
         id: deployment
