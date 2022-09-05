@@ -31,14 +31,14 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Border BorderThickness="0 0 1 0" BorderBrush="#D8D8D8">
-                <ListView x:Name="lvListResult" BorderThickness="0">
+                <ListView x:Name="listVAddr" BorderThickness="0">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn/>
-                            <GridViewColumn Header="IP"/>
-                            <GridViewColumn Header="MAC-Adresse"/>
-                            <GridViewColumn/>
-                            <GridViewColumn/>
+                            <GridViewColumn x:Name="IPColumn" Header="IP"/>
+                            <GridViewColumn x:Name="MACColumn" Header="MAC-Adresse"/>
+                            <GridViewColumn x:Name="HostColumn"/>
+                            <GridViewColumn x:Name="StateColumn"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
