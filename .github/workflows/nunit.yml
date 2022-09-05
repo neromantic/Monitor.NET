@@ -47,15 +47,15 @@ jobs:
         
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
-        with:
-          name: "Monitor.NET.Release"
-          path: "./dist"   
+      with:
+        name: "Monitor.NET.Release"
+        path: "./dist"   
     - name: Setup Pages
       uses: actions/configure-pages@v2
     - name: Upload artifact to Pages
       uses: actions/upload-pages-artifact@v1
-        with:
-          path: './dist'
+      with:
+        path: './dist'
     - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1   
