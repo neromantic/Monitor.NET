@@ -16,7 +16,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  Test:
+  Main:
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
     runs-on: windows-latest
 
     steps:
@@ -26,16 +28,11 @@ jobs:
       uses: microsoft/setup-msbuild@v1
 
     - name: Navigate to Workspace
-      run: cd "$GITHUB_WORKSPACE/Monitor.NET.Tests"
+      run: cd "./Monitor.NET.Tests"
 
     - name: Test
       run: dotnet test --no-build --verbosity norma
-
-  Build:
-    runs-on: windows-latest
-    env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-    steps:
+        
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v1.0.2
       
@@ -57,11 +54,4 @@ jobs:
       with:
         name: "Monitor.NET.Release"
         path: "./dist" 
-  
-  Deploy:
-    runs-on: windows-latest
-    
-    steps:
-    - name: Test
-      run: ls ./dist
         
