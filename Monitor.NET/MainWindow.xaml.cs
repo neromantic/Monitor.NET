@@ -80,20 +80,27 @@ namespace Monitor.NET
                             {
                                 addr = IPAddress.Parse(ipAddress);
                                 host = Dns.GetHostEntry(addr);
-
-                                listVAddr.Items.Add(new cPartsOfIpAddress { sIP = ipAddress, sHostName = host.HostName, sState = "Up" }); //Log successful pings
+                                Application.Current.Dispatcher.Invoke((Action)delegate {
+                                    listVAddr.Items.Add(new cPartsOfIpAddress { sIP = ipAddress, sHostName = host.HostName, sState = "Up" }); //Log successful pings
+                                });
+                                
                                 count++;
                             }
                             catch
                             {
-
-                                listVAddr.Items.Add(new cPartsOfIpAddress { sIP = ipAddress, sHostName = "Could not retrieve", sState = "Up" }); //Logs pings that are successful, but are most likely not windows machines
+                                Application.Current.Dispatcher.Invoke((Action)delegate {
+                                    listVAddr.Items.Add(new cPartsOfIpAddress { sIP = ipAddress, sHostName = "Could not retrieve", sState = "Up" }); //Logs pings that are successful, but are most likely not windows machines
+                                });
+                                
                                 count++;
                             }
                         }
                         else
                         {
+                            System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate {
                             listVAddr.Items.Add(new cPartsOfIpAddress { sIP = ipAddress, sHostName = "n/a", sState = "Down" }); //Log unsuccessful pings
+                                
+                            });
                         }
                     }
 

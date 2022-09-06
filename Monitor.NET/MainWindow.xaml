@@ -32,13 +32,21 @@
             </Grid.ColumnDefinitions>
             <Border BorderThickness="0 0 1 0" BorderBrush="#D8D8D8">
                 <ListView x:Name="listVAddr" BorderThickness="0">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Height" Value="50" />
+                            <Setter Property="Foreground" Value="Black"/>
+                            <Setter Property="FontSize" Value="20"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+
                     <ListView.View>
                         <GridView>
                             <GridViewColumn/>
-                            <GridViewColumn x:Name="IPColumn" Header="IP"/>
-                            <GridViewColumn x:Name="MACColumn" Header="MAC-Adresse"/>
-                            <GridViewColumn x:Name="HostColumn"/>
-                            <GridViewColumn x:Name="StateColumn"/>
+                            <GridViewColumn Header="IP"/>
+                            <GridViewColumn Header="MAC-Adresse"/>
+                            <GridViewColumn />
+                            <GridViewColumn />
                         </GridView>
                     </ListView.View>
                 </ListView>
