@@ -1,0 +1,57 @@
+
+name: Monitor.NET Test
+
+on:
+  push:
+    branches: main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  Main:
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1
+
+    - name: Navigate to Workspace
+      run: cd "./Monitor.NET.Tests"
+
+    - name: Test
+      run: dotnet test --no-build
+        
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.2
+      
+    - name: Navigate to Workspace
+      run: cd $GITHUB_WORKSPACE
+
+    - name: Create Build Directory
+      run: mkdir dist
+      
+    - name: Restore Packages
+      run: nuget restore Monitor.NET.sln
+
+    - name: Build Solution
+      run: |
+        msbuild.exe Monitor.NET.sln /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../dist"
+      
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: "Monitor.NET.Release"
+        path: "./dist" 
+        
