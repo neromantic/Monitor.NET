@@ -1,5 +1,5 @@
 
-name: Monitor.NET Build und Publish
+name: Monitor.NET Test
 
 on:
   push:
@@ -16,10 +16,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  Build:
     env:
-      name: github-pages
-      url: neromantic.github.io
       ACTIONS_ALLOW_UNSECURE_COMMANDS: true
     runs-on: windows-latest
 
@@ -29,6 +27,9 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1
 
+    - name: Test
+      run: dotnet test --no-build --verbosity norma
+      
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v1.0.2
       
@@ -44,19 +45,10 @@ jobs:
     - name: Build Solution
       run: |
         msbuild.exe Monitor.NET.sln /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../dist"
-        
+      
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
         name: "Monitor.NET.Release"
-        path: "./dist"   
-    - name: Setup Pages
-      uses: actions/configure-pages@v2
-    - name: Upload artifact to Pages
-      uses: actions/upload-pages-artifact@v1
-      with:
-        path: './dist'
-    - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v1   
+        path: "./dist" 
         
