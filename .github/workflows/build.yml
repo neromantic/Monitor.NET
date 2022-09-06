@@ -31,7 +31,7 @@ jobs:
       run: cd "./Monitor.NET.Tests"
 
     - name: Test
-      run: dotnet test --no-build --verbosity norma
+      run: dotnet test --no-build
         
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v1.0.2
