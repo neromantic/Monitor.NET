@@ -16,9 +16,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  Build:
-    env:
-      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+  Test:
     runs-on: windows-latest
 
     steps:
@@ -32,7 +30,12 @@ jobs:
 
     - name: Test
       run: dotnet test --no-build --verbosity norma
-      
+
+  Build:
+    runs-on: windows-latest
+    env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v1.0.2
       
@@ -54,4 +57,10 @@ jobs:
       with:
         name: "Monitor.NET.Release"
         path: "./dist" 
+  
+  Deploy:
+    runs-on: windows-latest
+
+    - name: Test
+      run: ls ./dist
         
