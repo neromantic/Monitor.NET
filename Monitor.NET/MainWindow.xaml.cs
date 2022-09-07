@@ -56,12 +56,14 @@ namespace Monitor.NET
 
             foreach (String ipInput in ipInputs)
             {
-                Match IPWithSubnetMatch = IPWithSubnetRegex.Match(ipInput);
-                if (IPWithSubnetMatch.Success)
+                Match IPMatch;
+                IPMatch = IPWithSubnetRegex.Match(ipInput);
+
+                if (IPMatch.Success)
                 {
 
-                    string ip = IPWithSubnetMatch.Groups[1].Value;
-                    int subnet = int.Parse(IPWithSubnetMatch.Groups[2].Value);
+                    string ip = IPMatch.Groups[1].Value;
+                    int subnet = int.Parse(IPMatch.Groups[2].Value);
 
                     long IPStart = MainWindow.IPToLong(ip);
                     long IPEnd = IPStart | ((1 << (32 - subnet)) - 1);
@@ -71,26 +73,35 @@ namespace Monitor.NET
                         IPs.Add(MainWindow.longToIP(IPStart));
                         IPStart++;
                     }
+                    continue;
                 }
-                else if (IPrangeRegex.Match(ipInput).Success)
+
+                IPMatch = IPrangeRegex.Match(ipInput);
+                if (IPMatch.Success)
                 {
-                    Match mathces = IPWithSubnetRegex.Match(ipInput);
-                    long IPStart = MainWindow.IPToLong(mathces.Groups[1].Value);
-                    long IPEnd = MainWindow.IPToLong(mathces.Groups[2].Value);
+                    long IPStart = MainWindow.IPToLong(IPMatch.Groups[1].Value);
+                    long IPEnd = MainWindow.IPToLong(IPMatch.Groups[2].Value);
 
                     while (IPStart < IPEnd)
                     {
                         IPs.Add(MainWindow.longToIP(IPStart));
                         IPStart++;
                     }
+
+                    continue;
                 }
-                else if (singleIPRegex.Match(ipInput).Success)
+
+                IPMatch = singleIPRegex.Match(ipInput);
+                if (IPMatch.Success)
                 {
                     IPs.Add(ipInput);
+                    continue;
                 }
+                throw new Exception("IP Adressen Bereich nicht korrekt :" + ipInput);
             }
             return IPs;
         }
+
         private void btnScan_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -146,7 +157,7 @@ namespace Monitor.NET
                     }
                     else
                     {
-                        System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                        Application.Current.Dispatcher.Invoke((Action)delegate
                         {
                             listVAddr.Items.Add(new cPartsOfIpAddress { sIP = ip, sHostName = "n/a", sState = "Down" }); //Log unsuccessful pings
 
@@ -168,4 +179,5 @@ namespace Monitor.NET
             }
         }
     }
+    // listVAddr.Items.Add(new cPartsOfIpAddress { IP = 1, MAC = "Test", DNS = 2});
 }

@@ -31,25 +31,34 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Border BorderThickness="0 0 1 0" BorderBrush="#D8D8D8">
-                <ListView x:Name="listVAddr" BorderThickness="0">
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="Height" Value="50" />
-                            <Setter Property="Foreground" Value="Black"/>
-                            <Setter Property="FontSize" Value="20"/>
+                <DataGrid x:Name="listVAddr" BorderThickness="0" Background="Transparent" Margin="0 20 0 0">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Foreground" Value="#9E9E9E"/>
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
                         </Style>
-                    </ListView.ItemContainerStyle>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header=""
+                                Width="Auto" />
+                        <DataGridTextColumn Header="IP" Binding="{Binding IP}" Width="*" />
 
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn/>
-                            <GridViewColumn Header="IP"/>
-                            <GridViewColumn Header="MAC-Adresse"/>
-                            <GridViewColumn />
-                            <GridViewColumn />
-                        </GridView>
-                    </ListView.View>
-                </ListView>
+                        <DataGridTextColumn Header="MAC-Adresse" 
+                            Binding="{Binding MAC}"
+                            Width="*"
+                         />
+
+                        <DataGridTextColumn Header="DNS"
+                                 Binding="{Binding DNS}"          
+                                 Width="*" 
+                                                />
+
+
+                        <DataGridTemplateColumn Header=""
+                                Width="Auto" />
+                    </DataGrid.Columns>
+                </DataGrid>
             </Border>
         </Grid>
         
