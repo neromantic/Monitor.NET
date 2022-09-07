@@ -104,6 +104,11 @@ namespace Monitor.NET
 
         private void btnScan_Click(object sender, RoutedEventArgs e)
         {
+            Application.Current.Dispatcher.Invoke((Action)delegate
+            {
+                listVAddr.Items.Clear();
+            });
+
             try
             {
 
@@ -122,7 +127,7 @@ namespace Monitor.NET
                     myPing = new Ping();
                     try
                     {
-                        reply = myPing.Send(ip, 500); //Ping IP address with 500ms timeout
+                        reply = myPing.Send(ip, 100); //Ping IP address with 500ms timeout
                     }
                     catch (Exception)
                     {
@@ -140,7 +145,7 @@ namespace Monitor.NET
                             host = Dns.GetHostEntry(addr);
                             Application.Current.Dispatcher.Invoke((Action)delegate
                             {
-                                listVAddr.Items.Add(new cPartsOfIpAddress { sIP = ip, sHostName = host.HostName, sState = "Up" }); //Log successful pings
+                                listVAddr.Items.Add(new cPartsOfIpAddress { IP = ip, DNS = host.HostName ?? ""}); //Log successful pings
                             });
 
                             count++;
@@ -149,19 +154,11 @@ namespace Monitor.NET
                         {
                             Application.Current.Dispatcher.Invoke((Action)delegate
                             {
-                                listVAddr.Items.Add(new cPartsOfIpAddress { sIP = ip, sHostName = "Could not retrieve", sState = "Up" }); //Logs pings that are successful, but are most likely not windows machines
+                                listVAddr.Items.Add(new cPartsOfIpAddress { IP = ip }); //Logs pings that are successful, but are most likely not windows machines
                             });
 
                             count++;
                         }
-                    }
-                    else
-                    {
-                        Application.Current.Dispatcher.Invoke((Action)delegate
-                        {
-                            listVAddr.Items.Add(new cPartsOfIpAddress { sIP = ip, sHostName = "n/a", sState = "Down" }); //Log unsuccessful pings
-
-                        });
                     }
                 }
 
