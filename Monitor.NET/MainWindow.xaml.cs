@@ -23,6 +23,9 @@ namespace Monitor.NET
         [DllImport("Ws2_32.dll")]
         private static extern Int32 inet_addr(string ip);
 
+        bool bScanning = false;
+        Thread myThread;
+
         Regex singleIPRegex = new Regex(@"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b");
         Regex IPWithSubnetRegex = new Regex(@"(\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b)\s?\/(\b\d{1,3})");
         Regex IPrangeRegex = new Regex(@"(\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\b\s?-\s?(\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})");
@@ -32,6 +35,7 @@ namespace Monitor.NET
         public MainWindow()
         {
             InitializeComponent();
+            myThread = new Thread(() => PerformPing());
         }
 
         private static string longToIP(long ip)
@@ -140,7 +144,7 @@ namespace Monitor.NET
                             sMac = GetClientMAC(ip);
                             Application.Current.Dispatcher.Invoke((Action)delegate
                             {
-                                listVAddr.Items.Add(new cPartsOfIpAddress { IP = ip, MAC = sMac}); //Log successful pings
+                                listVAddr.Items.Add(new cPartsOfIpAddress { IP = ip, MAC = sMac }); //Log successful pings
                             });
 
                             count++;
@@ -150,7 +154,7 @@ namespace Monitor.NET
                             sMac = GetClientMAC(ip);
                             Application.Current.Dispatcher.Invoke((Action)delegate
                             {
-                                listVAddr.Items.Add(new cPartsOfIpAddress { IP = ip, MAC = sMac}); //Logs pings that are successful, but are most likely not windows machines
+                                listVAddr.Items.Add(new cPartsOfIpAddress { IP = ip, MAC = sMac }); //Logs pings that are successful, but are most likely not windows machines
                             });
 
                             count++;
@@ -161,7 +165,7 @@ namespace Monitor.NET
                         sMac = GetClientMAC(ip);
                         Application.Current.Dispatcher.Invoke((Action)delegate
                         {
-                            listVAddr.Items.Add(new cPartsOfIpAddress { IP = ip, MAC = sMac}); //Log unsuccessful pings
+                            listVAddr.Items.Add(new cPartsOfIpAddress { IP = ip, MAC = sMac }); //Log unsuccessful pings
 
                         });
                     }
@@ -182,8 +186,19 @@ namespace Monitor.NET
         }
         private void btnScan_Click(object sender, RoutedEventArgs e)
         {
-            Thread myThread = new Thread(() => PerformPing());
-            myThread.Start();
+            if (bScanning == true)
+            {
+                myThread.Abort();
+                btnScan.Content = "Scannen";
+                bScanning = false;
+            }
+            else
+            {
+                myThread = new Thread(() => PerformPing());
+                myThread.Start();
+                btnScan.Content = "Abbrechen";
+                bScanning = true;
+            }
         }
         private static string GetClientMAC(string strClientIP)
         {
