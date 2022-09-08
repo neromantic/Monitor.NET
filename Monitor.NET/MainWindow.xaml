@@ -31,7 +31,8 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Border BorderThickness="0 0 1 0" BorderBrush="#D8D8D8">
-                <DataGrid x:Name="listVAddr" BorderThickness="0" Background="Transparent" Margin="0 20 0 0">
+                <DataGrid x:Name="listVAddr" BorderThickness="0" Background="Transparent" Margin="0 20 0 0" 
+                          GridLinesVisibility="None" RowHeight="35" ColumnHeaderHeight="35" HeadersVisibility="Column">
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader">
                             <Setter Property="Background" Value="Transparent"/>
@@ -42,6 +43,10 @@
                             <Setter Property="Background" Value="Transparent"/>
                             <Setter Property="HorizontalAlignment" Value="Center"/>
                         </Style>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="FontWeight" Value="Bold"/>
+                            <Setter Property="IsHitTestVisible" Value="False"/>
+                        </Style>
                     </DataGrid.Resources>
                     <DataGrid.Columns>
                         <DataGridTemplateColumn Header=""
@@ -50,103 +55,16 @@
 
                         <DataGridTextColumn Header="MAC-Adresse" 
                             Binding="{Binding MAC}"
-                            Width="*"
-                         />
-
-                        <DataGridTextColumn Header="DNS"
+                            Width="*"/>
+                        <!--<DataGridTextColumn Header="DNS"
                                  Binding="{Binding DNS}"          
                                  Width="*" 
-                                                />
-
-
+                                                />-->
                         <DataGridTemplateColumn Header=""
                                 Width="Auto" />
                     </DataGrid.Columns>
                 </DataGrid>
             </Border>
         </Grid>
-        
     </Grid>
-    <!--<Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="7.04"/>
-            <RowDefinition Height="16.5"/>
-            <RowDefinition Height="6.46"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <StatusBar Grid.Row="0" Grid.ColumnSpan="2" Padding="40, 20, 40, 20" Background="#F8F8F8" Grid.RowSpan="3"/>
-        <Button Content="Scannen" HorizontalAlignment="Left" Margin="261,2,0,0" VerticalAlignment="Top" Width="85" Height="23" 
-                Padding="1,1,1,1" Grid.RowSpan="3">
-            <Button.Style>
-                <Style TargetType="{x:Type Button}">
-                    <Setter Property="Background" Value="Black"/>
-                    <Setter Property="Foreground" Value="White"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="{x:Type Button}">
-                                <Border Background="{TemplateBinding Background}">
-                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="DarkSlateGray"/>
-                            <Setter Property="Foreground" Value="White"/>
-                        </Trigger>
-                        <Trigger Property="IsMouseCaptured" Value="True">
-                            <Setter Property="Background" Value="DarkGray"/>
-                            <Setter Property="Foreground" Value="White"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </Button.Style>
-        </Button>
-        <ListView Grid.Row="3" Margin="0,5,0,0" Background="Transparent">
-            <ListView.Style>
-                <Style TargetType="{x:Type ListView}">
-                    <Setter Property="Background" Value="Transparent"/>
-                    <Setter Property="Foreground" Value="Black"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="{x:Type ListView}">
-                                <Border Background="{TemplateBinding Background}">
-                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                    </Style>
-            </ListView.Style>
-            <ListView.View>
-                <GridView>
-                    <GridView.ColumnHeaderContainerStyle>
-                        <Style TargetType="GridViewColumnHeader">
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="Foreground" Value="Black"/>
-                            <Setter Property="BorderBrush" Value="Transparent"/>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="true">
-                                    <Setter Property="Background" Value="Transparent"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </GridView.ColumnHeaderContainerStyle>
-                    <GridViewColumn/>
-                    <GridViewColumn Header="IP"/>
-                    <GridViewColumn Header="MAC-Adresse"/>
-                    <GridViewColumn/>
-                    <GridViewColumn/>
-                </GridView>
-            </ListView.View>
-            <ListViewItem ContentStringFormat="test"/>
-        </ListView>
-        <TextBox Grid.Row="0" Margin="10,2,464,5" Foreground="Black" Grid.RowSpan="3">
-        </TextBox>
-    </Grid>-->
 </Window>

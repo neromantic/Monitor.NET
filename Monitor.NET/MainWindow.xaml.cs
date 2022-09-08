@@ -140,7 +140,7 @@ namespace Monitor.NET
                             sMac = GetClientMAC(ip);
                             Application.Current.Dispatcher.Invoke((Action)delegate
                             {
-                                listVAddr.Items.Add(new cPartsOfIpAddress { sIP = ip, MAC = sMac, sHostName = host.HostName, sState = "Up" }); //Log successful pings
+                                listVAddr.Items.Add(new cPartsOfIpAddress { IP = ip, MAC = sMac}); //Log successful pings
                             });
 
                             count++;
@@ -150,7 +150,7 @@ namespace Monitor.NET
                             sMac = GetClientMAC(ip);
                             Application.Current.Dispatcher.Invoke((Action)delegate
                             {
-                                listVAddr.Items.Add(new cPartsOfIpAddress { sIP = ip, MAC = sMac, sHostName = "Could not retrieve", sState = "Up" }); //Logs pings that are successful, but are most likely not windows machines
+                                listVAddr.Items.Add(new cPartsOfIpAddress { IP = ip, MAC = sMac}); //Logs pings that are successful, but are most likely not windows machines
                             });
 
                             count++;
@@ -161,7 +161,7 @@ namespace Monitor.NET
                         sMac = GetClientMAC(ip);
                         Application.Current.Dispatcher.Invoke((Action)delegate
                         {
-                            listVAddr.Items.Add(new cPartsOfIpAddress { sIP = ip, MAC = sMac, sHostName = "n/a", sState = "Down" }); //Log unsuccessful pings
+                            listVAddr.Items.Add(new cPartsOfIpAddress { IP = ip, MAC = sMac}); //Log unsuccessful pings
 
                         });
                     }
