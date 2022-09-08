@@ -4,6 +4,8 @@ name: Monitor.NET Test
 on:
   push:
     branches: main
+  pull_request:
+    branches: main
 
 permissions:
   contents: read
