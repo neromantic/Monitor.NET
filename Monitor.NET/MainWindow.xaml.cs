@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
@@ -17,7 +18,11 @@ namespace Monitor.NET
     /// </summary>
     public partial class MainWindow : Window
     {
-        List<cPartsOfIpAddress> lvResult;
+        [DllImport("Iphlpapi.dll")]
+        private static extern int SendARP(Int32 dest, Int32 host, ref Int64 mac, ref Int32 length);
+        [DllImport("Ws2_32.dll")]
+        private static extern Int32 inet_addr(string ip);
+
         Regex singleIPRegex = new Regex(@"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b");
         Regex IPWithSubnetRegex = new Regex(@"(\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b)\s?\/(\b\d{1,3})");
         Regex IPrangeRegex = new Regex(@"(\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\b\s?-\s?(\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})");
@@ -56,14 +61,12 @@ namespace Monitor.NET
 
             foreach (String ipInput in ipInputs)
             {
-                Match IPMatch;
-                IPMatch = IPWithSubnetRegex.Match(ipInput);
-
-                if (IPMatch.Success)
+                Match IPWithSubnetMatch = IPWithSubnetRegex.Match(ipInput);
+                if (IPWithSubnetMatch.Success)
                 {
 
-                    string ip = IPMatch.Groups[1].Value;
-                    int subnet = int.Parse(IPMatch.Groups[2].Value);
+                    string ip = IPWithSubnetMatch.Groups[1].Value;
+                    int subnet = int.Parse(IPWithSubnetMatch.Groups[2].Value);
 
                     long IPStart = MainWindow.IPToLong(ip);
                     long IPEnd = IPStart | ((1 << (32 - subnet)) - 1);
@@ -73,36 +76,27 @@ namespace Monitor.NET
                         IPs.Add(MainWindow.longToIP(IPStart));
                         IPStart++;
                     }
-                    continue;
                 }
-
-                IPMatch = IPrangeRegex.Match(ipInput);
-                if (IPMatch.Success)
+                else if (IPrangeRegex.Match(ipInput).Success)
                 {
-                    long IPStart = MainWindow.IPToLong(IPMatch.Groups[1].Value);
-                    long IPEnd = MainWindow.IPToLong(IPMatch.Groups[2].Value);
+                    Match mathces = IPWithSubnetRegex.Match(ipInput);
+                    long IPStart = MainWindow.IPToLong(mathces.Groups[1].Value);
+                    long IPEnd = MainWindow.IPToLong(mathces.Groups[2].Value);
 
                     while (IPStart < IPEnd)
                     {
                         IPs.Add(MainWindow.longToIP(IPStart));
                         IPStart++;
                     }
-
-                    continue;
                 }
-
-                IPMatch = singleIPRegex.Match(ipInput);
-                if (IPMatch.Success)
+                else if (singleIPRegex.Match(ipInput).Success)
                 {
                     IPs.Add(ipInput);
-                    continue;
                 }
-                throw new Exception("IP Adressen Bereich nicht korrekt :" + ipInput);
             }
             return IPs;
         }
-
-        private void btnScan_Click(object sender, RoutedEventArgs e)
+        private void PerformPing()
         {
             try
             {
@@ -113,7 +107,7 @@ namespace Monitor.NET
                 PingReply reply;
                 IPAddress addr;
                 IPHostEntry host;
-
+                string sMac;
 
 
                 //Loops through the IP range, maxing out at 255
@@ -138,18 +132,20 @@ namespace Monitor.NET
                         {
                             addr = IPAddress.Parse(ip);
                             host = Dns.GetHostEntry(addr);
+                            sMac = GetClientMAC(ip);
                             Application.Current.Dispatcher.Invoke((Action)delegate
                             {
-                                listVAddr.Items.Add(new cPartsOfIpAddress { sIP = ip, sHostName = host.HostName, sState = "Up" }); //Log successful pings
+                                listVAddr.Items.Add(new cPartsOfIpAddress { sIP = ip, MAC = sMac, sHostName = host.HostName, sState = "Up" }); //Log successful pings
                             });
 
                             count++;
                         }
                         catch
                         {
+                            sMac = GetClientMAC(ip);
                             Application.Current.Dispatcher.Invoke((Action)delegate
                             {
-                                listVAddr.Items.Add(new cPartsOfIpAddress { sIP = ip, sHostName = "Could not retrieve", sState = "Up" }); //Logs pings that are successful, but are most likely not windows machines
+                                listVAddr.Items.Add(new cPartsOfIpAddress { sIP = ip, MAC = sMac, sHostName = "Could not retrieve", sState = "Up" }); //Logs pings that are successful, but are most likely not windows machines
                             });
 
                             count++;
@@ -157,9 +153,10 @@ namespace Monitor.NET
                     }
                     else
                     {
+                        sMac = GetClientMAC(ip);
                         Application.Current.Dispatcher.Invoke((Action)delegate
                         {
-                            listVAddr.Items.Add(new cPartsOfIpAddress { sIP = ip, sHostName = "n/a", sState = "Down" }); //Log unsuccessful pings
+                            listVAddr.Items.Add(new cPartsOfIpAddress { sIP = ip, MAC = sMac, sHostName = "n/a", sState = "Down" }); //Log unsuccessful pings
 
                         });
                     }
@@ -178,6 +175,48 @@ namespace Monitor.NET
                 Console.WriteLine(ex.StackTrace);
             }
         }
+        private void btnScan_Click(object sender, RoutedEventArgs e)
+        {
+            Thread myThread = new Thread(() => PerformPing());
+            myThread.Start();
+        }
+        private static string GetClientMAC(string strClientIP)
+        {
+            string mac_dest = "";
+            try
+            {
+                Int32 ldest = inet_addr(strClientIP);
+                Int32 lhost = inet_addr("");
+                Int64 macinfo = new Int64();
+                Int32 len = 6;
+                int res = SendARP(ldest, 0, ref macinfo, ref len);
+                string mac_src = macinfo.ToString("X");
+
+                while (mac_src.Length < 12)
+                {
+                    mac_src = mac_src.Insert(0, "0");
+                }
+
+                for (int i = 0; i < 11; i++)
+                {
+                    if (0 == (i % 2))
+                    {
+                        if (i == 10)
+                        {
+                            mac_dest = mac_dest.Insert(0, mac_src.Substring(i, 2));
+                        }
+                        else
+                        {
+                            mac_dest = "-" + mac_dest.Insert(0, mac_src.Substring(i, 2));
+                        }
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                throw new Exception("L?i " + err.Message);
+            }
+            return mac_dest;
+        }
     }
-    // listVAddr.Items.Add(new cPartsOfIpAddress { IP = 1, MAC = "Test", DNS = 2});
 }
