@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Forms;
@@ -23,7 +22,7 @@ namespace Monitor.NET
         [DllImport("Ws2_32.dll")]
         private static extern Int32 inet_addr(string ip);
 
-       
+
 
 
 
@@ -32,11 +31,11 @@ namespace Monitor.NET
             InitializeComponent();
         }
 
-       
 
-        private List<String> getIPAddresses()
+
+        private List<string> getIPAddresses()
         {
-            List<String> IPs = new List<String>();
+            List<string> IPs = new List<string>();
             string input = "";
 
             Application.Current.Dispatcher.Invoke((Action)delegate
@@ -44,44 +43,13 @@ namespace Monitor.NET
                 input = txtNetworkAddress.Text;
             });
 
-            List<String> ipInputs = input.Split(',').ToList();
+            List<string> ipInputs = input.Split(',').ToList();
 
-            foreach (String ipInput in ipInputs)
+            foreach (string ipInput in ipInputs)
             {
-                Match IPWithSubnetMatch = IPWithSubnetRegex.Match(ipInput);
-                if (IPWithSubnetMatch.Success)
-                {
-
-                    string ip = IPWithSubnetMatch.Groups[1].Value;
-                    int subnet = int.Parse(IPWithSubnetMatch.Groups[2].Value);
-
-                    long IPStart = MainWindow.IPToLong(ip);
-                    long IPEnd = IPStart | ((1 << (32 - subnet)) - 1);
-
-                    while (IPStart < IPEnd)
-                    {
-                        IPs.Add(MainWindow.longToIP(IPStart));
-                        IPStart++;
-                    }
-                }
-                else if (IPrangeRegex.Match(ipInput).Success)
-                {
-                    Match mathces = IPWithSubnetRegex.Match(ipInput);
-                    long IPStart = MainWindow.IPToLong(mathces.Groups[1].Value);
-                    long IPEnd = MainWindow.IPToLong(mathces.Groups[2].Value);
-
-                    while (IPStart < IPEnd)
-                    {
-                        IPs.Add(MainWindow.longToIP(IPStart));
-                        IPStart++;
-                    }
-                }
-                else if (singleIPRegex.Match(ipInput).Success)
-                {
-                    IPs.Add(ipInput);
-                }
+                IPs.AddRange(IPAddressResolver.Resolve(ipInput));
             }
-            return IPs;
+            return IPs.Distinct().ToList();
         }
         private void PerformPing()
         {
@@ -127,7 +95,7 @@ namespace Monitor.NET
                             sMac = GetClientMAC(ip);
                             Application.Current.Dispatcher.Invoke((Action)delegate
                             {
-                                listVAddr.Items.Add(new cPartsOfIpAddress { IP = ip, MAC = sMac}); //Log successful pings
+                                listVAddr.Items.Add(new cPartsOfIpAddress { IP = ip, MAC = sMac }); //Log successful pings
                             });
 
                             count++;
@@ -137,7 +105,7 @@ namespace Monitor.NET
                             sMac = GetClientMAC(ip);
                             Application.Current.Dispatcher.Invoke((Action)delegate
                             {
-                                listVAddr.Items.Add(new cPartsOfIpAddress { IP = ip, MAC = sMac}); //Logs pings that are successful, but are most likely not windows machines
+                                listVAddr.Items.Add(new cPartsOfIpAddress { IP = ip, MAC = sMac }); //Logs pings that are successful, but are most likely not windows machines
                             });
 
                             count++;
@@ -148,7 +116,7 @@ namespace Monitor.NET
                         sMac = GetClientMAC(ip);
                         Application.Current.Dispatcher.Invoke((Action)delegate
                         {
-                            listVAddr.Items.Add(new cPartsOfIpAddress { IP = ip, MAC = sMac}); //Log unsuccessful pings
+                            listVAddr.Items.Add(new cPartsOfIpAddress { IP = ip, MAC = sMac }); //Log unsuccessful pings
 
                         });
                     }
