@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Monitor.NET"
         mc:Ignorable="d"
-        Title="MainWindow" Height="1024" Width="1440">
+        Title="Monitor.NET" Height="1024" Width="1440" Icon="/Icon.png">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
@@ -14,15 +14,21 @@
         <Border Background="#F8F8F8" BorderThickness="0 1 0 1" BorderBrush="#D8D8D8" Grid.Row="0">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition MaxWidth="250"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Border Padding="20 5 0 5">
-                    <TextBox x:Name="txtNetworkAddress" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Padding="10 5" BorderBrush="#D8D8D8"></TextBox>
-                </Border>
-                <Border Grid.Column="1" Padding="10 5">
-                    <Button x:Name="btnScan" Padding="10 0" Background="Black" Foreground="White" Click="btnScan_Click">Scannen</Button>
-                </Border>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Padding="20 5 0 5">
+                        <TextBox x:Name="txtNetworkAddress" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Padding="10 5" BorderBrush="#D8D8D8"></TextBox>
+                    </Border>
+                    <Border Grid.Column="1" Padding="10 5 0 5">
+                        <Button x:Name="btnScan" Padding="10 0" Background="Black" Foreground="White" Click="btnScan_Click">Scannen</Button>
+                    </Border>
+                </Grid>
             </Grid>
         </Border>
         <Grid Grid.Row="1">
