@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Forms;
@@ -23,37 +22,20 @@ namespace Monitor.NET
         [DllImport("Ws2_32.dll")]
         private static extern Int32 inet_addr(string ip);
 
-        bool bScanning = false;
-        Thread myThread;
 
-        Regex singleIPRegex = new Regex(@"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b");
-        Regex IPWithSubnetRegex = new Regex(@"(\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b)\s?\/(\b\d{1,3})");
-        Regex IPrangeRegex = new Regex(@"(\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\b\s?-\s?(\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})");
 
 
 
         public MainWindow()
         {
             InitializeComponent();
-            myThread = new Thread(() => PerformPing());
         }
 
-        private static string longToIP(long ip)
-        {
-            return ((ip >> 24) & 0xff).ToString() + '.' + ((ip >> 16) & 0xff).ToString() + '.' + ((ip >> 8) & 0xff).ToString() + '.' + (ip & 0xff).ToString();
-        }
 
-        private static long IPToLong(string ipAddress)
-        {
-            IPAddress ip;
-            if (IPAddress.TryParse(ipAddress, out ip))
-                return (((int)ip.GetAddressBytes()[0] << 24) | ((int)ip.GetAddressBytes()[1] << 16) | ((int)ip.GetAddressBytes()[2] << 8) | ip.GetAddressBytes()[3]);
-            else return 0;
-        }
 
-        private List<String> getIPAddresses()
+        private List<string> getIPAddresses()
         {
-            List<String> IPs = new List<String>();
+            List<string> IPs = new List<string>();
             string input = "";
 
             Application.Current.Dispatcher.Invoke((Action)delegate
@@ -61,44 +43,13 @@ namespace Monitor.NET
                 input = txtNetworkAddress.Text;
             });
 
-            List<String> ipInputs = input.Split(',').ToList();
+            List<string> ipInputs = input.Split(',').ToList();
 
-            foreach (String ipInput in ipInputs)
+            foreach (string ipInput in ipInputs)
             {
-                Match IPWithSubnetMatch = IPWithSubnetRegex.Match(ipInput);
-                if (IPWithSubnetMatch.Success)
-                {
-
-                    string ip = IPWithSubnetMatch.Groups[1].Value;
-                    int subnet = int.Parse(IPWithSubnetMatch.Groups[2].Value);
-
-                    long IPStart = MainWindow.IPToLong(ip);
-                    long IPEnd = IPStart | ((1 << (32 - subnet)) - 1);
-
-                    while (IPStart < IPEnd)
-                    {
-                        IPs.Add(MainWindow.longToIP(IPStart));
-                        IPStart++;
-                    }
-                }
-                else if (IPrangeRegex.Match(ipInput).Success)
-                {
-                    Match mathces = IPWithSubnetRegex.Match(ipInput);
-                    long IPStart = MainWindow.IPToLong(mathces.Groups[1].Value);
-                    long IPEnd = MainWindow.IPToLong(mathces.Groups[2].Value);
-
-                    while (IPStart < IPEnd)
-                    {
-                        IPs.Add(MainWindow.longToIP(IPStart));
-                        IPStart++;
-                    }
-                }
-                else if (singleIPRegex.Match(ipInput).Success)
-                {
-                    IPs.Add(ipInput);
-                }
+                IPs.AddRange(IPAddressResolver.Resolve(ipInput));
             }
-            return IPs;
+            return IPs.Distinct().ToList();
         }
         private void PerformPing()
         {
@@ -186,19 +137,8 @@ namespace Monitor.NET
         }
         private void btnScan_Click(object sender, RoutedEventArgs e)
         {
-            if (bScanning == true)
-            {
-                myThread.Abort();
-                btnScan.Content = "Scannen";
-                bScanning = false;
-            }
-            else
-            {
-                myThread = new Thread(() => PerformPing());
-                myThread.Start();
-                btnScan.Content = "Abbrechen";
-                bScanning = true;
-            }
+            Thread myThread = new Thread(() => PerformPing());
+            myThread.Start();
         }
         private static string GetClientMAC(string strClientIP)
         {
