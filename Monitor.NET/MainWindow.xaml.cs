@@ -23,9 +23,7 @@ namespace Monitor.NET
         [DllImport("Ws2_32.dll")]
         private static extern Int32 inet_addr(string ip);
 
-        Regex singleIPRegex = new Regex(@"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b");
-        Regex IPWithSubnetRegex = new Regex(@"(\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b)\s?\/(\b\d{1,3})");
-        Regex IPrangeRegex = new Regex(@"(\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\b\s?-\s?(\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})");
+       
 
 
 
@@ -34,18 +32,7 @@ namespace Monitor.NET
             InitializeComponent();
         }
 
-        private static string longToIP(long ip)
-        {
-            return ((ip >> 24) & 0xff).ToString() + '.' + ((ip >> 16) & 0xff).ToString() + '.' + ((ip >> 8) & 0xff).ToString() + '.' + (ip & 0xff).ToString();
-        }
-
-        private static long IPToLong(string ipAddress)
-        {
-            IPAddress ip;
-            if (IPAddress.TryParse(ipAddress, out ip))
-                return (((int)ip.GetAddressBytes()[0] << 24) | ((int)ip.GetAddressBytes()[1] << 16) | ((int)ip.GetAddressBytes()[2] << 8) | ip.GetAddressBytes()[3]);
-            else return 0;
-        }
+       
 
         private List<String> getIPAddresses()
         {
