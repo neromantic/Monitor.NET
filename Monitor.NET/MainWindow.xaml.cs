@@ -98,6 +98,11 @@ namespace Monitor.NET
         }
         private void PerformPing()
         {
+            Application.Current.Dispatcher.Invoke((Action)delegate
+            {
+                listVAddr.Items.Clear();
+            });
+
             try
             {
 
@@ -116,7 +121,7 @@ namespace Monitor.NET
                     myPing = new Ping();
                     try
                     {
-                        reply = myPing.Send(ip, 500); //Ping IP address with 500ms timeout
+                        reply = myPing.Send(ip, 100); //Ping IP address with 500ms timeout
                     }
                     catch (Exception)
                     {

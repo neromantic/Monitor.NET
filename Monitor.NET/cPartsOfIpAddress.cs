@@ -4,8 +4,8 @@ namespace Monitor.NET
 {
     internal class cPartsOfIpAddress : ListViewItem
     {
-        public string sIP { get; set; }
-        public string sHostName { get; set; }
-        public string sState { get; set; }
+        public string IP { get; set; }
+        public string MAC { get; set; }
+        public string DNS { get; set; }
     }
 }
