@@ -29,9 +29,10 @@ namespace Monitor.NET
         public MainWindow()
         {
             InitializeComponent();
+            myThread = new Thread(() => PerformPing());
         }
 
-
+       
 
         private List<string> getIPAddresses()
         {
@@ -137,8 +138,19 @@ namespace Monitor.NET
         }
         private void btnScan_Click(object sender, RoutedEventArgs e)
         {
-            Thread myThread = new Thread(() => PerformPing());
-            myThread.Start();
+            if (bScanning == true)
+            {
+                myThread.Abort();
+                btnScan.Content = "Scannen";
+                bScanning = false;
+            }
+            else
+            {
+                myThread = new Thread(() => PerformPing());
+                myThread.Start();
+                btnScan.Content = "Abbrechen";
+                bScanning = true;
+            }
         }
         private static string GetClientMAC(string strClientIP)
         {
